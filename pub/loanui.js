@@ -99,7 +99,9 @@ function recalculate(){
 				}
 
 				newrow = document.createElement('tr');
-				if (myloan.incline) newrow.className = 'incline';
+				newrow.className = '';
+				if (myloan.incline) newrow.className += ' incline';
+				if (tmpPmt < myloan.payment) newrow.className += ' default';
 				html = "<td>"+myloan.name+"</td>";
 				html += "<td>"+myprincipal+"</td>";
 				html += "<td>"+myloan.apr+"</td>";
