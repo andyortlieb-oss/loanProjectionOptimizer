@@ -1,0 +1,37 @@
+<html>
+	<head>
+
+			<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+			<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
+			<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/ui-lightness/jquery-ui.css" type="text/css" media="all" />
+
+		<style>
+			body {
+				background-color: #555;
+				color: #fff;
+			}
+		</style>
+	</head>
+	<body>
+		<h1> Loan Payment Projector </h1>
+		Income Available: $<input id="#incomeavail" value="0.0"/><br />
+		<table>
+			<thead id="loansetup">
+				<tr>
+					<td>Loan Name</td><td>Principal</td><td>APR</td><td>Payment</td><td>Current Interest</td><td>Total Interest</td>
+				</tr>
+				<tr id="addrow">
+					<td colspan=5><button type="button" onClick="addloan()">Add</button></td>
+				</tr>
+			</thead>
+			<tbody id="loanprojections">
+				<tr>
+					<td colspan=3>&nbsp;</td><td>Month: </td><td> ABC of 20DE</td>
+				</tr>
+			</tbody>
+		</table>
+	</body>
+
+			<script src="./loanui.js"></script>
+
+</html>
