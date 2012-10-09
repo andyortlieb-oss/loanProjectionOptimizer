@@ -6,14 +6,27 @@
 			<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/ui-lightness/jquery-ui.css" type="text/css" media="all" />
 
 		<style>
-			body {
+			.nobody {
 				background-color: #555;
 				color: #fff;
+
 			}
+			table {
+				border-collapse: collapse;
+				border-spacing: 0;
+			}
+			td {
+				border-left: 1px solid #aaa;
+			}
+			.MonthIteration td {
+				padding-top: 20px;
+				border-bottom: 1px solid black;
+			}
+
 		</style>
 	</head>
 	<body>
-		<h1> Loan Payment Projector </h1>
+		<!-- <h1> Loan Payment Projector </h1> -->
 		Income Available: $<input id="#incomeavail" value="0.0"/><br />
 		<table>
 			<thead id="loansetup">
@@ -33,5 +46,28 @@
 	</body>
 
 			<script src="./loanui.js"></script>
+			<script>
+					function buildLoans(){
+						var myloans = JSON.parse( window.location.hash.slice(1) );
+						var id;
+						for (var i=0; i< myloans.length; ++i){
+							id = addloan(myloans[i])
 
+							$("#l"+id+"_name")[0].value = myloans[i].name;
+							$("#l"+id+"_principal")[0].value = myloans[i].principal;
+							$("#l"+id+"_apr")[0].value = myloans[i].apr;
+							$("#l"+id+"_payment")[0].value = myloans[i].payment;
+
+							update(id, 'name');
+							update(id, 'principal');
+							update(id, 'apr');
+							update(id, 'payment');
+						}
+
+
+					}
+
+					buildLoans();
+
+			</script>
 </html>

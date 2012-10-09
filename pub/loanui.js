@@ -16,6 +16,9 @@ function update(id,attr){
 
 	loans[id][attr] = val;
 	recalculate();
+
+	window.location.hash = "#"+JSON.stringify(loans);
+
 }
 
 function recalculate(){
@@ -42,7 +45,8 @@ function recalculate(){
 		++count;
 
 		newrow = document.createElement('tr');
-		newrow.innerHTML = "<td colspan=3>("+count+")</td><td> Month: </td><td>"+reportMonth+"</td><td>"+reportYear+"</td>"
+		newrow.className = 'MonthIteration'
+		newrow.innerHTML = "<td colspan=6>("+count+") Month: "+reportMonth+" of "+reportYear+""
 		loanprojections.appendChild(newrow);
 
 		for (var i=0; i < loans.length; ++i){
@@ -53,24 +57,25 @@ function recalculate(){
 				myloan.stashprincipal = myloan.principal;
 				myloan.incline = 0;
 			}
-		
+
 
 			// Shall we report on this account for this month?
-			if ( 
+			if (
 					// Have we enough data?
-					parseInt(myloan.principal) && parseInt(myloan.payment) && 
+					parseInt(myloan.principal) && parseInt(myloan.payment) &&
 					// Are we paid off?
 					myloan.stashprincipal>0 &&
 					// Have we been increasing our balance for over 48 months?
 					myloan.incline < 48
 
 			){
-				
+
 
 				myprincipal = myloan.stashprincipal;
 
 
 				myinterest = ( myprincipal * (myloan.apr/100) ) / 12;
+				myinterest = Math.ceil( myinterest * 100 )/100;
 				myloan.total+=myinterest;
 
 				myloan.stashprincipal = parseFloat(myprincipal) + parseFloat(myinterest) - parseFloat(myloan.payment);
@@ -93,7 +98,7 @@ function recalculate(){
 				loanprojections.appendChild(newrow);
 
 				hasBalance = true
-			}	
+			}
 		}
 
 		reportDateTrack.setMonth( reportDateTrack.getMonth()+1 );
@@ -103,7 +108,7 @@ function recalculate(){
 
 }
 
-function addloan(){
+function addloan(config){
 	console.log("adding");
 	var newrow = document.createElement('tr');
 	var html = "";
@@ -115,8 +120,10 @@ function addloan(){
 	};
 	var id = ( loans.push(loan) -1 );
 
+	config = config || {};
+
 	html += "<td><input type='text' id='l"+id+"_name' onchange='update("+id+",\"name\");' /></td>";
-	html += "<td><input type='text' id='l"+id+"_principal' onchange='update("+id+",\"principal\");' /></td>";
+	html += "<td><input type='text' id='l"+id+"_principal' onchange='update("+id+",\"principal\");'  /></td>";
 	html += "<td><input type='text' id='l"+id+"_apr' onchange='update("+id+",\"apr\");' /></td>";
 	html += "<td><input type='text' id='l"+id+"_payment' onchange='update("+id+",\"payment\");' /></td>";
 	//html += "<td><span id='l"+id+"_cinterest'>a</span></td>";
@@ -125,5 +132,7 @@ function addloan(){
 
 	newrow.innerHTML = html;
 	loansetup.insertBefore( newrow, addrow );
+
+	return id;
 
 }
