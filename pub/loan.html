@@ -33,7 +33,7 @@
 	</head>
 	<body>
 		<!-- <h1> Loan Payment Projector </h1> -->
-		Income Available: $<input id="#incomeavail" value="0.0"/><br />
+		Funds Available: $<input type='text' id="fundsavail" value="0.0" /><br />
 		<table>
 
 
@@ -45,6 +45,21 @@
 
 				<tr id="addrow">
 					<td colspan=5><button type="button" onClick="addloan()">Add</button></td>
+				</tr>
+			</tbody>
+
+			<body>
+				<tr class='report label'><td colspan=6>Overall Report: </td></tr>
+				<tr>
+					<td>Total Interest Paid:</td>
+					<td><span id="rptTotalInterestPaid"></span></td>
+
+					<td>Total Paid:</td>
+					<td><span id="rptTotalPaid"></span></td>
+
+					<td>Freedom Date:</td>
+					<td><span id="rptFreedomDate"></span></td>
+
 				</tr>
 			</tbody>
 
@@ -65,8 +80,11 @@
 			<script src="./loanui.js"></script>
 			<script>
 					function buildLoansFromHash(){
-						var myloans = JSON.parse( window.location.hash.slice(1) );
+						var mydata = JSON.parse( window.location.hash.slice(1) );
+						var myloans = mydata.loans;
+						var myfunds = mydata.funds;
 						var id;
+						fundsavail.value = myfunds;
 						for (var i=0; i< myloans.length; ++i){
 							id = addloan(myloans[i])
 
@@ -80,7 +98,6 @@
 							update(id, 'apr');
 							update(id, 'payment');
 						}
-
 
 					}
 

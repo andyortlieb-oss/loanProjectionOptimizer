@@ -1,7 +1,7 @@
 
 	loansetup = $("#loansetup")[0];
 	addrow = $('#addrow')[0];
-	incomeavail = $('#incomeavail')[0];
+	fundsavail = $('#fundsavail')[0];
 	loanprojections = $("#loanprojections")[0];
 
 	loans = [];
@@ -17,7 +17,7 @@ function update(id,attr){
 	loans[id][attr] = val;
 	recalculate();
 
-	window.location.hash = "#"+JSON.stringify(loans);
+	window.location.hash = "#"+JSON.stringify({loans:loans, funds:fundsavail.value });
 
 }
 
@@ -31,6 +31,10 @@ function recalculate(){
 	var reportDateTrack = new Date();
 	var myloan, myprincipal, myinterest;
 
+	var fundsAvailable = parseFloat(fundsavail.value);
+	var tmpFunds=0;
+	var tmpPmt = 0;
+
 
 	loanprojections.innerHTML="";
 
@@ -38,6 +42,8 @@ function recalculate(){
 
 	while ( hasBalance ){
 		hasBalance = false;
+
+		tmpFunds = fundsAvailable;
 
 		reportMonth = months[reportDateTrack.getMonth()];
 		reportYear = reportDateTrack.getFullYear();
@@ -49,6 +55,8 @@ function recalculate(){
 		newrow.innerHTML = "<td colspan=6>("+count+") Month: "+reportMonth+" of "+reportYear+""
 		loanprojections.appendChild(newrow);
 
+
+		// Make Minimum payments
 		for (var i=0; i < loans.length; ++i){
 			myloan = loans[i];
 
@@ -79,7 +87,10 @@ function recalculate(){
 				myloan.total+=myinterest;
 				myloan.total = Math.ceil( myloan.total * 100 )/100;
 
-				myloan.stashprincipal = parseFloat(myprincipal) + parseFloat(myinterest) - parseFloat(myloan.payment);
+				tmpPmt = Math.min(parseFloat(myloan.payment), tmpFunds);
+				tmpFunds = tmpFunds - tmpPmt;
+
+				myloan.stashprincipal = parseFloat(myprincipal) + parseFloat(myinterest) - parseFloat(tmpPmt);
 				myloan.stashprincipal = Math.ceil( myloan.stashprincipal * 100 )/100;
 				if (myloan.stashprincipal > myprincipal){
 					myloan.incline++;
@@ -92,7 +103,7 @@ function recalculate(){
 				html = "<td>"+myloan.name+"</td>";
 				html += "<td>"+myprincipal+"</td>";
 				html += "<td>"+myloan.apr+"</td>";
-				html += "<td>"+myloan.payment+"</td>";
+				html += "<td>"+tmpPmt+"</td>";
 				html += "<td>"+myinterest+"</td>";
 				html += "<td>"+myloan.total+"</td>";
 
@@ -107,6 +118,13 @@ function recalculate(){
 					$('#l'+i+'_total')[0].innerHTML = myloan.total;
 				}
 			}
+		}
+
+
+
+		// Allocate leftover funds for extra paments
+		for (var i=0; i < loans.length; ++i){
+			myloan = loans[i];
 		}
 
 		reportDateTrack.setMonth( reportDateTrack.getMonth()+1 );
