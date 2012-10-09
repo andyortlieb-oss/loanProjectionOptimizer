@@ -21,6 +21,12 @@
 			.MonthIteration td {
 				padding-top: 20px;
 				border-bottom: 1px solid black;
+				background-color: #eef;
+			}
+			.label td{
+
+				padding-top: 30px;
+				font-weight: bolder;
 			}
 
 		</style>
@@ -29,17 +35,28 @@
 		<!-- <h1> Loan Payment Projector </h1> -->
 		Income Available: $<input id="#incomeavail" value="0.0"/><br />
 		<table>
-			<thead id="loansetup">
-				<tr>
-					<td>Loan Name</td><td>Principal</td><td>APR</td><td>Payment</td><td>Current Interest</td><td>Total Interest</td>
+
+
+			<tbody id="loansetup">
+				<tr class="setup label"><td colspan=6> Loans Setup: </td></tr>
+				<tr class="setup head">
+					<td>Loan Name&nbsp;&nbsp;</td><td>Principal&nbsp;&nbsp;</td><td>APR&nbsp;&nbsp;</td><td>Minimum Payment&nbsp;&nbsp;</td><td>Freedom Date&nbsp;&nbsp;</td><td>Total Interest Paid&nbsp;&nbsp;</td>
 				</tr>
+
 				<tr id="addrow">
 					<td colspan=5><button type="button" onClick="addloan()">Add</button></td>
 				</tr>
-			</thead>
+			</tbody>
+
+			<tbody>
+				<tr class='projections label'><td colspan=6>Projections: </td></tr>
+				<tr class="projections head">
+					<td>Loan Name&nbsp;&nbsp;</td><td>Principal&nbsp;&nbsp;</td><td>APR&nbsp;&nbsp;</td><td>Payment&nbsp;&nbsp;</td><td>Current Interest&nbsp;&nbsp;</td><td>Total Interest&nbsp;&nbsp;</td>
+				</tr>
+			</tbody>
 			<tbody id="loanprojections">
 				<tr>
-					<td colspan=3>&nbsp;</td><td>Month: </td><td> ABC of 20DE</td>
+					<td colspan=6>&nbsp;</td>
 				</tr>
 			</tbody>
 		</table>
@@ -47,7 +64,7 @@
 
 			<script src="./loanui.js"></script>
 			<script>
-					function buildLoans(){
+					function buildLoansFromHash(){
 						var myloans = JSON.parse( window.location.hash.slice(1) );
 						var id;
 						for (var i=0; i< myloans.length; ++i){
@@ -67,7 +84,7 @@
 
 					}
 
-					buildLoans();
+					buildLoansFromHash();
 
 			</script>
 </html>

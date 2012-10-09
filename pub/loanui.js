@@ -77,8 +77,10 @@ function recalculate(){
 				myinterest = ( myprincipal * (myloan.apr/100) ) / 12;
 				myinterest = Math.ceil( myinterest * 100 )/100;
 				myloan.total+=myinterest;
+				myloan.total = Math.ceil( myloan.total * 100 )/100;
 
 				myloan.stashprincipal = parseFloat(myprincipal) + parseFloat(myinterest) - parseFloat(myloan.payment);
+				myloan.stashprincipal = Math.ceil( myloan.stashprincipal * 100 )/100;
 				if (myloan.stashprincipal > myprincipal){
 					myloan.incline++;
 				} else {
@@ -98,6 +100,12 @@ function recalculate(){
 				loanprojections.appendChild(newrow);
 
 				hasBalance = true
+
+				// Are we free?
+				if (myloan.stashprincipal <=0){
+					$('#l'+i+'_freedom')[0].innerHTML = reportDateTrack.toString().split(' ').slice(0,4).join(' ');
+					$('#l'+i+'_total')[0].innerHTML = myloan.total;
+				}
 			}
 		}
 
@@ -126,9 +134,9 @@ function addloan(config){
 	html += "<td><input type='text' id='l"+id+"_principal' onchange='update("+id+",\"principal\");'  /></td>";
 	html += "<td><input type='text' id='l"+id+"_apr' onchange='update("+id+",\"apr\");' /></td>";
 	html += "<td><input type='text' id='l"+id+"_payment' onchange='update("+id+",\"payment\");' /></td>";
-	//html += "<td><span id='l"+id+"_cinterest'>a</span></td>";
-	//html += "<td><span id='l"+id+"_tinterest'>b</span></td>";
-	html += "<td colspan=2>&nbsp;</td>"
+	html += "<td><span id='l"+id+"_freedom'>a</span></td>";
+	html += "<td><span id='l"+id+"_total'>b</span></td>";
+
 
 	newrow.innerHTML = html;
 	loansetup.insertBefore( newrow, addrow );
