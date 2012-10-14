@@ -43,7 +43,15 @@
 	</head>
 	<body>
 		<!-- <h1> Loan Payment Projector </h1> -->
-		Funds Available: $<input type='text' id="fundsavail" value="0.0" /><br />
+		Funds Available: $<input type='text' id="fundsavail" value="0.0" />
+		Optimization Method: 
+		<select id='optimization'>
+			<option value='manual'>Manual (None)</option>
+			<option value='shortsight'>Short Sight</option>
+			<option value='distrByMonthInterest'>Distribution by Month Interest</option>
+			<option value='distrByRemainingPrincipal'>Distribution by Remaining Principal</option>
+		</select>
+		<br />
 		<table>
 
 

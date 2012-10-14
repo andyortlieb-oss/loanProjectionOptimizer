@@ -122,7 +122,9 @@ function recalculate(){
 			}
 		}
 
-
+		newrow = document.createElement('tr');
+		newrow.innerHTML = "<td colspan=6 style='background-color:#ffa;' >"+tmpFunds+"</td>";
+		loanprojections.appendChild(newrow);
 
 		// Allocate leftover funds for extra paments
 		for (var i=0; i < loans.length; ++i){
