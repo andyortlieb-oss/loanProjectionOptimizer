@@ -91,7 +91,7 @@ function recalculate(){
 				myloan.total+=myinterest;
 				myloan.total = roundup( myloan.total );
 
-				tmpPmt = Math.min(parseFloat(myloan.payment), tmpFunds);
+				tmpPmt = Math.min(parseFloat(myloan.payment), tmpFunds, parseFloat(myloan.principal)+myinterest);
 				tmpFunds = tmpFunds - tmpPmt;
 
 				myloan.stashprincipal = parseFloat(myprincipal) + parseFloat(myinterest) - parseFloat(tmpPmt);
