@@ -39,6 +39,10 @@
 				font-weight:bolder;
 			}
 
+			.monthlyTotal{
+				color:gray;
+			}
+
 		</style>
 	</head>
 	<body>
@@ -116,7 +120,10 @@
 							update(id, 'principal');
 							update(id, 'apr');
 							update(id, 'payment');
+
 						}
+
+						recalculate();
 
 					}
 

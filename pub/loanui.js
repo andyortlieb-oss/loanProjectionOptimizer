@@ -39,12 +39,17 @@ function recalculate(){
 	var tmpFunds=0;
 	var tmpPmt = 0;
 
+	var orPaid = 0;
+	var mrPrincipal=0, mrCurrInterest=0, mrTotalInterest=0, mrPaid=0;
+
 
 	loanprojections.innerHTML="";
 
 	//console.log("Hamster running on wheeel...");
 
 	while ( hasBalance ){
+		mrPrincipal=0, mrCurrInterest=0, mrTotalInterest=0, mrPaid=0;
+
 		hasBalance = false;
 
 		tmpFunds = fundsAvailable;
@@ -93,6 +98,8 @@ function recalculate(){
 
 				tmpPmt = Math.min(parseFloat(myloan.payment), tmpFunds, parseFloat(myloan.principal)+myinterest);
 				tmpFunds = tmpFunds - tmpPmt;
+				orPaid += tmpPmt;
+				mrPaid += tmpPmt;
 
 				myloan.stashprincipal = parseFloat(myprincipal) + parseFloat(myinterest) - parseFloat(tmpPmt);
 				myloan.stashprincipal = roundup( myloan.stashprincipal );
@@ -107,10 +114,10 @@ function recalculate(){
 				if (myloan.incline) newrow.className += ' incline';
 				if (tmpPmt < myloan.payment) newrow.className += ' default';
 				html = "<td>"+myloan.name+"</td>";
-				html += "<td>"+myprincipal+"</td>";
+				html += "<td>"+myprincipal+"</td>"; mrPrincipal += parseFloat(myprincipal);
 				html += "<td>"+myloan.apr+"</td>";
 				html += "<td>"+tmpPmt+"</td>";
-				html += "<td>"+myinterest+"</td>";
+				html += "<td>"+myinterest+"</td>"; mrCurrInterest += parseFloat(myinterest);
 				html += "<td>"+myloan.total+"</td>";
 
 				newrow.innerHTML = html;
@@ -124,19 +131,36 @@ function recalculate(){
 					$('#l'+i+'_total')[0].innerHTML = myloan.total;
 				}
 			}
-		}
 
-		newrow = document.createElement('tr');
-		newrow.innerHTML = "<td colspan=6 style='background-color:#ffa;' >"+tmpFunds+"</td>";
-		loanprojections.appendChild(newrow);
+		}
 
 
 		// Allocate leftover funds for extra paments
-		for (var i=0; i < loans.length; ++i){
-			myloan = loans[i];
-		}
+		// for (var i=0; i < loans.length; ++i){
+		// 	myloan = loans[i];
+		// }
+
+
+		///////////////////////////////////
+		//   Monthly Report
+		///////////////////////////////////
+		newrow = document.createElement('tr');
+		newrow.className = 'monthlyTotal';
+		newrow.innerHTML = "<td>("+tmpFunds+" leftover funds)</td>";
+		newrow.innerHTML += "<td>"+roundup(mrPrincipal)+"</td>"
+		newrow.innerHTML += "<td></td>";
+		newrow.innerHTML += "<td>"+mrPaid+"</td>";
+		newrow.innerHTML += "<td>"+roundup( mrCurrInterest )+"</td>";
+
+		loanprojections.appendChild(newrow);
+
+		reportDateTrack.setMonth( reportDateTrack.getMonth()+1 );
 
 	}
+
+	/////////////////////////////////////
+	// Overall Report...
+	//////////////////////////////////////
 
 	// Report on total interest paid overall
 	var totalInterest = 0;
@@ -145,8 +169,8 @@ function recalculate(){
 		totalInterest += loans[i].total;
 	}
 	$('#rptTotalInterestPaid')[0].innerHTML = roundup(totalInterest);
-
-	reportDateTrack.setMonth( reportDateTrack.getMonth()+1 );
+	$('#rptTotalPaid')[0].innerHTML = roundup(orPaid);
+	$('#rptFreedomDate')[0].innerHTML = reportDateTrack.toString().split(' ').slice(0,4).join(' ');
 
 
 }
