@@ -20,7 +20,6 @@ function update(id,attr){
 	//console.log("Updating, ", id, attr, val);
 
 	loans[id][attr] = val;
-	recalculate();
 
 	window.location.hash = "#"+JSON.stringify({loans:loans, funds:fundsavail.value });
 
@@ -142,7 +141,7 @@ function recalculate(){
 	// Report on total interest paid overall
 	var totalInterest = 0;
 	for (var i =0; i< loans.length; ++i){
-		//console.log(totalInterest, loans[i].total)
+		console.log(totalInterest, loans[i].total)
 		totalInterest += loans[i].total;
 	}
 	$('#rptTotalInterestPaid')[0].innerHTML = roundup(totalInterest);
