@@ -10,9 +10,14 @@
 	// monthoffset=(new Date()).getMonth();
 	// yearoffset=(new Date()).getYear();
 
+function roundup(num){
+
+	return  Math.ceil( num * 100 )/100;
+}
+
 function update(id,attr){
 	var val = $('#l'+id+'_'+attr)[0].value;
-	console.log("Updating, ", id, attr, val);
+	//console.log("Updating, ", id, attr, val);
 
 	loans[id][attr] = val;
 	recalculate();
@@ -38,7 +43,7 @@ function recalculate(){
 
 	loanprojections.innerHTML="";
 
-	console.log("Hamster running on wheeel...");
+	//console.log("Hamster running on wheeel...");
 
 	while ( hasBalance ){
 		hasBalance = false;
@@ -47,7 +52,7 @@ function recalculate(){
 
 		reportMonth = months[reportDateTrack.getMonth()];
 		reportYear = reportDateTrack.getFullYear();
-		console.log(reportMonth);
+		//console.log(reportMonth);
 		++count;
 
 		newrow = document.createElement('tr');
@@ -83,15 +88,15 @@ function recalculate(){
 
 
 				myinterest = ( myprincipal * (myloan.apr/100) ) / 12;
-				myinterest = Math.ceil( myinterest * 100 )/100;
+				myinterest = roundup( myinterest );
 				myloan.total+=myinterest;
-				myloan.total = Math.ceil( myloan.total * 100 )/100;
+				myloan.total = roundup( myloan.total );
 
 				tmpPmt = Math.min(parseFloat(myloan.payment), tmpFunds);
 				tmpFunds = tmpFunds - tmpPmt;
 
 				myloan.stashprincipal = parseFloat(myprincipal) + parseFloat(myinterest) - parseFloat(tmpPmt);
-				myloan.stashprincipal = Math.ceil( myloan.stashprincipal * 100 )/100;
+				myloan.stashprincipal = roundup( myloan.stashprincipal );
 				if (myloan.stashprincipal > myprincipal){
 					myloan.incline++;
 				} else {
@@ -126,20 +131,29 @@ function recalculate(){
 		newrow.innerHTML = "<td colspan=6 style='background-color:#ffa;' >"+tmpFunds+"</td>";
 		loanprojections.appendChild(newrow);
 
+
 		// Allocate leftover funds for extra paments
 		for (var i=0; i < loans.length; ++i){
 			myloan = loans[i];
 		}
 
-		reportDateTrack.setMonth( reportDateTrack.getMonth()+1 );
-
-
 	}
+
+	// Report on total interest paid overall
+	var totalInterest = 0;
+	for (var i =0; i< loans.length; ++i){
+		//console.log(totalInterest, loans[i].total)
+		totalInterest += loans[i].total;
+	}
+	$('#rptTotalInterestPaid')[0].innerHTML = roundup(totalInterest);
+
+	reportDateTrack.setMonth( reportDateTrack.getMonth()+1 );
+
 
 }
 
 function addloan(config){
-	console.log("adding");
+	//console.log("adding");
 	var newrow = document.createElement('tr');
 	var html = "";
 	var loan = {
