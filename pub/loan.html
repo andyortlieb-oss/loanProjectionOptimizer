@@ -53,7 +53,7 @@
 		<!-- <h1> Loan Payment Projector </h1> -->
 		Funds Available: $<input type='text' id="fundsavail" value="0.0" />
 		Optimization Method: 
-		<select id='optimization'>
+		<select id='optimization' >
 			<option value='manual'>Manual (None)</option>
 			<option value='allToHighestMonthlyInterest'>All to Highest Monthly Interest</option>
 			<option value='distrByMonthInterest'>Distribution by Month Interest</option>
@@ -112,6 +112,7 @@
 						var myfunds = mydata.funds;
 						var id;
 						fundsavail.value = myfunds;
+						$('#optimization')[0].value = mydata.optimization;
 						for (var i=0; i< myloans.length; ++i){
 							id = addloan(myloans[i])
 

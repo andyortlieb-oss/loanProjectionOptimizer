@@ -16,12 +16,15 @@ function roundup(num){
 }
 
 function update(id,attr){
-	var val = $('#l'+id+'_'+attr)[0].value;
-	//console.log("Updating, ", id, attr, val);
+	if (id !==undefined && attr !==undefined){
 
-	loans[id][attr] = val;
+		var val = $('#l'+id+'_'+attr)[0].value;
+		//console.log("Updating, ", id, attr, val);
 
-	window.location.hash = "#"+JSON.stringify({loans:loans, funds:fundsavail.value });
+		loans[id][attr] = val;
+	}
+
+	window.location.hash = "#"+JSON.stringify({loans:loans, funds:fundsavail.value , optimization:$('#optimization')[0].value});
 
 }
 
@@ -138,8 +141,8 @@ function recalculate(){
 				if (myloan.incline) newrow.className += ' incline';
 				if (tmpPmt < myloan.payment) newrow.className += ' default';
 				html = "<td>"+myloan.name+"</td>";
-				html += "<td>"+tmpPmt+"</td>";
-				html += "<td>"+myloan.principalRemaining+"</td>"; mrPrincipal += parseFloat(myloan.principalRemaining);
+				html += "<td>"+roundup(tmpPmt)+"</td>";
+				html += "<td>"+roundup(myloan.principalRemaining)+"</td>"; mrPrincipal += parseFloat(myloan.principalRemaining);
 				html += "<td>"+myloan.apr+"</td>";
 				html += "<td>"+myloan.stashinterest+"</td>"; mrCurrInterest += parseFloat(myloan.stashinterest);
 				html += "<td>"+myloan.interestTotal+"</td>";
@@ -162,17 +165,25 @@ function recalculate(){
 		if (tmpFunds > 0 && optimization!=='manual'){
 			switch (optimization){
 				case "allToHighestMonthlyInterest":
-
+					var delcnt =0;
 					while( tmpFunds > 0 ){
-
-
-						console.log("A")
+						console.log("Looping:",++delcnt);
 						// Find the highest current interest.
 						var sortloans = loans.concat();
+
+						// Don't sort the things with no balance
+						for (var i2=0; i2<sortloans.length; ++i2){
+							if (sortloans[i2].principalRemaining <= 0)
+								sortloans.splice(sortloans.indexOf(sortloans[i2]),1);
+						}
+
 						var winner = sortloans.sort(function(a,b){return (b.stashinterest||0)-(a.stashinterest||0)})[0];
 						console.log(winner, winner.stashinterest);
 
-						if ( winner.principalRemaining<=0) break;
+						if ( winner.principalRemaining<=0) {
+							console.log("Breaking cuz...", winner, winner.principalRemaining, sortloans);
+							break;
+						}
 
 						tmpPmt = Math.min(winner.principalRemaining, tmpFunds);
 						tmpFunds -= tmpPmt;
@@ -182,8 +193,8 @@ function recalculate(){
 						extranewrow.className = 'extraPmt';
 
 						html = "<td>"+winner.name+"</td>";
-						html += "<td>"+tmpPmt+"</td>";
-						html += "<td>"+winner.principalRemaining+"</td>";
+						html += "<td>"+roundup(tmpPmt)+"</td>";
+						html += "<td>"+roundup(winner.principalRemaining)+"</td>";
 						html += "<td></td>";
 						html += "<td></td>";
 						html += "<td></td>";
