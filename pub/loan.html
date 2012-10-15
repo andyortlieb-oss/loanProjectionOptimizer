@@ -52,12 +52,12 @@
 	<body>
 		<!-- <h1> Loan Payment Projector </h1> -->
 		Funds Available: $<input type='text' id="fundsavail" value="0.0" />
-		Optimization Method: 
-		<select id='optimization' onchange='console.log("1", this.value);update();' >
+		Optimization Method:
+		<select id='optimization' onchange='update();' >
 			<option value='manual'>Manual (None)</option>
 			<option value='allToHighestMonthlyInterest'>All to Highest Monthly Interest</option>
-			<option value='distrByMonthInterest'>Distribution by Month Interest</option>
-			<option value='distrByRemainingPrincipal'>Distribution by Remaining Principal</option>
+			<option value='distrByMonthInterest'>Proportional Distribution by Month Interest</option>
+			<!-- <option value='distrByRemainingPrincipal'>Distribution by Remaining Principal</option> -->
 		</select>
 		<button type='button' onClick='recalculate()'>Project</button>
 		<br />

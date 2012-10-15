@@ -179,7 +179,7 @@ function recalculate(){
 						}
 
 						var winner = sortloans.sort(function(a,b){return (b.interestCurrent||0)-(a.interestCurrent||0)})[0];
-						console.log(winner, winner.interestCurrent);
+
 
 						if ( winner.principalRemaining<=0) {
 							break;
@@ -204,6 +204,39 @@ function recalculate(){
 
 					}
 				break;
+				case 'distrByMonthInterest':
+					(function(){
+						var i2, total=0 , tmpPmt, origTmpFunds=tmpFunds,  extranewrow;
+
+						// Get the totals
+						for (i2=0;i2<loans.length;++i2){
+							total += loans[i2].interestCurrent;
+						}
+
+						// Make the payments
+						for (i2=0;i2<loans.length;++i2){
+							if (loans[i2].interestCurrent > 0 && loans[i2].principalRemaining>0){
+								tmpPmt = origTmpFunds * ( loans[i2].interestCurrent / total )
+								tmpFunds -= tmpPmt;
+								pay(loans[i2], tmpPmt);
+
+								extranewrow = document.createElement('tr');
+								extranewrow.className = 'extraPmt';
+
+								html = "<td>"+loans[i2].name+"</td>";
+								html += "<td>"+roundup(tmpPmt)+"</td>";
+								html += "<td>"+roundup(loans[i2].principalRemaining)+"</td>";
+								html += "<td></td>";
+								html += "<td></td>";
+								html += "<td></td>";
+								extranewrow.innerHTML = html;
+
+								loanprojections.appendChild(extranewrow);
+							}
+						}
+
+					})()
+				break;
 
 			}
 		}
@@ -218,7 +251,7 @@ function recalculate(){
 		newrow = document.createElement('tr');
 		newrow.className = 'monthlyTotal';
 		newrow.innerHTML = "<td>("+roundup(tmpFunds)+" leftover funds)</td>";
-		newrow.innerHTML += "<td>"+mrPaid+"</td>";
+		newrow.innerHTML += "<td>"+roundup(mrPaid)+"</td>";
 		newrow.innerHTML += "<td>"+roundup(mrPrincipal)+"</td>"
 		newrow.innerHTML += "<td></td>";
 		newrow.innerHTML += "<td>"+roundup( mrCurrInterest )+"</td>";
@@ -236,7 +269,7 @@ function recalculate(){
 	// Report on total interest paid overall
 	var totalInterest = 0;
 	for (var i =0; i< loans.length; ++i){
-		console.log(totalInterest, loans[i].interestTotal)
+		//console.log(totalInterest, loans[i].interestTotal)
 		totalInterest += loans[i].interestTotal;
 	}
 	$('#rptTotalInterestPaid')[0].innerHTML = roundup(totalInterest);
