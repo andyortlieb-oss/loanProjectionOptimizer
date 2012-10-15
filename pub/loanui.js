@@ -45,7 +45,7 @@ function recalculate(){
 	var orPaid = 0;
 	var mrPrincipal=0, mrCurrInterest=0, mrTotalInterest=0, mrPaid=0;
 
-	var optimization = $("#optimization")[0].value; 
+	var optimization = $("#optimization")[0].value;
 
 
 	function pay(objLoan, amt){
@@ -56,6 +56,12 @@ function recalculate(){
 
 		var datecrap = reportDateTrack.toString().split(' ');
 		$('#l'+loans.indexOf(objLoan)+'_freedom')[0].innerHTML = datecrap[1]+' '+datecrap[3];
+
+
+		// Are we free?
+		if (objLoan.principalRemaining <=0){
+			$('#l'+loans.indexOf(objLoan)+'_total')[0].innerHTML = objLoan.interestTotal;
+		}
 
 		return amt - newAmt;
 	}
@@ -152,10 +158,6 @@ function recalculate(){
 
 				hasBalance = true
 
-				// Are we free?
-				if (myloan.principalRemaining <=0){
-					$('#l'+i+'_total')[0].innerHTML = myloan.interestTotal;
-				}
 			}
 
 		}
@@ -200,7 +202,7 @@ function recalculate(){
 
 						loanprojections.appendChild(extranewrow);
 
-					}				
+					}
 				break;
 
 			}
