@@ -92,7 +92,7 @@ function recalculate(){
 		// Make Minimum payments
 		for (var i=0; i < loans.length; ++i){
 			myloan = loans[i];
-			myloan.stashinterest = 0;
+			myloan.interestCurrent = 0;
 
 			if (count===1) { // Reset our nonsense.
 				myloan.interestTotal = 0;
@@ -116,17 +116,17 @@ function recalculate(){
 				principalStart = myloan.principalRemaining;
 
 
-				myloan.stashinterest = ( principalStart * (myloan.apr/100) ) / 12;
-				myloan.stashinterest = roundup( myloan.stashinterest );
-				myloan.interestTotal+=myloan.stashinterest;
+				myloan.interestCurrent = ( principalStart * (myloan.apr/100) ) / 12;
+				myloan.interestCurrent = roundup( myloan.interestCurrent );
+				myloan.interestTotal+=myloan.interestCurrent;
 				myloan.interestTotal = roundup( myloan.interestTotal );
 
-				tmpPmt = Math.min(parseFloat(myloan.payment), tmpFunds, parseFloat(myloan.principalRemaining)+myloan.stashinterest);
+				tmpPmt = Math.min(parseFloat(myloan.payment), tmpFunds, parseFloat(myloan.principalRemaining)+myloan.interestCurrent);
 				tmpFunds = tmpFunds - tmpPmt;
 				//orPaid += tmpPmt;
 				//mrPaid += tmpPmt;
 
-				myloan.principalRemaining = parseFloat(principalStart) + parseFloat(myloan.stashinterest);
+				myloan.principalRemaining = parseFloat(principalStart) + parseFloat(myloan.interestCurrent);
 				//myloan.principalRemaining = roundup( myloan.principalRemaining );
 				pay(myloan, tmpPmt)
 
@@ -144,7 +144,7 @@ function recalculate(){
 				html += "<td>"+roundup(tmpPmt)+"</td>";
 				html += "<td>"+roundup(myloan.principalRemaining)+"</td>"; mrPrincipal += parseFloat(myloan.principalRemaining);
 				html += "<td>"+myloan.apr+"</td>";
-				html += "<td>"+myloan.stashinterest+"</td>"; mrCurrInterest += parseFloat(myloan.stashinterest);
+				html += "<td>"+myloan.interestCurrent+"</td>"; mrCurrInterest += parseFloat(myloan.interestCurrent);
 				html += "<td>"+myloan.interestTotal+"</td>";
 
 				newrow.innerHTML = html;
@@ -167,7 +167,6 @@ function recalculate(){
 				case "allToHighestMonthlyInterest":
 					var delcnt =0;
 					while( tmpFunds > 0 ){
-						console.log("Looping:",++delcnt);
 						// Find the highest current interest.
 						var sortloans = loans.concat();
 
@@ -177,11 +176,10 @@ function recalculate(){
 								sortloans.splice(sortloans.indexOf(sortloans[i2]),1);
 						}
 
-						var winner = sortloans.sort(function(a,b){return (b.stashinterest||0)-(a.stashinterest||0)})[0];
-						console.log(winner, winner.stashinterest);
+						var winner = sortloans.sort(function(a,b){return (b.interestCurrent||0)-(a.interestCurrent||0)})[0];
+						console.log(winner, winner.interestCurrent);
 
 						if ( winner.principalRemaining<=0) {
-							console.log("Breaking cuz...", winner, winner.principalRemaining, sortloans);
 							break;
 						}
 
