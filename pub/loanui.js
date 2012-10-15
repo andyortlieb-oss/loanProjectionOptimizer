@@ -50,6 +50,10 @@ function recalculate(){
 		objLoan.principalRemaining -= newAmt;
 		orPaid += newAmt;
 		mrPaid += newAmt;
+
+		var datecrap = reportDateTrack.toString().split(' ');
+		$('#l'+loans.indexOf(objLoan)+'_freedom')[0].innerHTML = datecrap[1]+' '+datecrap[3];
+
 		return amt - newAmt;
 	}
 
@@ -119,7 +123,7 @@ function recalculate(){
 				//orPaid += tmpPmt;
 				//mrPaid += tmpPmt;
 
-				//myloan.principalRemaining = parseFloat(principalStart) + parseFloat(myloan.stashinterest) - parseFloat(tmpPmt);
+				myloan.principalRemaining = parseFloat(principalStart) + parseFloat(myloan.stashinterest);
 				//myloan.principalRemaining = roundup( myloan.principalRemaining );
 				pay(myloan, tmpPmt)
 
@@ -147,8 +151,6 @@ function recalculate(){
 
 				// Are we free?
 				if (myloan.principalRemaining <=0){
-					datecrap = reportDateTrack.toString().split(' ');
-					$('#l'+i+'_freedom')[0].innerHTML = datecrap[1]+' '+datecrap[3];
 					$('#l'+i+'_total')[0].innerHTML = myloan.interestTotal;
 				}
 			}
