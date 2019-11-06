@@ -7,7 +7,7 @@ It then iterates every month until your loans are paid off to present projection
 
 If you have extra available funds, you can choose an optimization strategy to see which one works best to pay your loans off the fastest & while spending the least amount of money on interest.
 
-See it in action http://andyortlieb.github.io/loanProjectionOptimizer/pub/loan.html
+See it in action [here](https://andyortlieb-oss.github.io/loanProjectionOptimizer/pub/loan.html)
 
 Note that when you update your loan parameters, it stores the information in the URL (in your address bar), so you can actually get everything all set up and bookmark it in your browser and come back to it any time rather than having to enter in your loan information every month.
 
