@@ -108,7 +108,7 @@
 			<script src="./loanui.js"></script>
 			<script>
 					function buildLoansFromHash(){
-						var mydata = JSON.parse( window.location.hash.slice(1) );
+						var mydata = JSON.parse( decodeURIComponent( window.location.hash.slice(1) ) );
 						var myloans = mydata.loans;
 						var myfunds = mydata.funds;
 						var id;
